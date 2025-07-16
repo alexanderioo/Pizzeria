@@ -3,7 +3,7 @@ import "./scss/app.scss";
 import Header from "../src/components/Header";
 import Home from "../src/pages/Home";
 import NotFound from "./pages/NotFound";
-import Cart from "./pages/Card";
+import Cart from "./pages/Cart";
 import { Routes, Route } from "react-router-dom";
 function App() {
   return (
