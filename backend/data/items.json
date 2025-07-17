@@ -52,7 +52,7 @@
   {
     "id": 5,
     "imageUrl": "/img/pizza/6.avif",
-    "title": "Крэйзи пепперони",
+    "title": "Барселона",
     "types": [0],
     "sizes": [30, 40],
     "price": 580,
@@ -93,6 +93,36 @@
     "id": 9,
     "imageUrl": "/img/pizza/1.avif",
     "title": "Овощи и грибы 🌱",
+    "types": [0, 1],
+    "sizes": [26, 30, 40],
+    "price": 285,
+    "category": 5,
+    "rating": 7
+  },
+  {
+    "id": 10,
+    "imageUrl": "/img/pizza/1.avif",
+    "title": "Колумбийская",
+    "types": [0, 1],
+    "sizes": [26, 30, 40],
+    "price": 285,
+    "category": 5,
+    "rating": 7
+  },
+  {
+    "id": 11,
+    "imageUrl": "/img/pizza/1.avif",
+    "title": "Бургер",
+    "types": [0, 1],
+    "sizes": [26, 30, 40],
+    "price": 285,
+    "category": 5,
+    "rating": 7
+  },
+  {
+    "id": 12,
+    "imageUrl": "/img/pizza/1.avif",
+    "title": "Франческо",
     "types": [0, 1],
     "sizes": [26, 30, 40],
     "price": 285,

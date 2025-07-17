@@ -3,16 +3,32 @@ import Sort from "../components/Sort";
 import Categories from "../components/Categories";
 import PizzaBlock from "../components/PizzaBlock/";
 import Skeleton from "../components/PizzaBlock/Skeleton";
+import Pagination from "../components/Pagination";
 import axios from "axios";
-const Home = () => {
+const Home = ({ searchValue }) => {
   const [items, setItems] = React.useState([]);
   const [isLoading, setLoading] = React.useState(true);
-
   const [categoryId, setCategoryId] = React.useState(0);
   const [sortType, setSortType] = React.useState({
     name: "популярности",
     sortProperty: "rating",
   });
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const itemPerPage = 4;
+  const start = itemPerPage * currentPage;
+  const end = start + itemPerPage;
+  const filteredItems = items
+    .sort((a, b) => {
+      if (sortType.sortProperty === "title") {
+        return a.title.localeCompare(b.title);
+      } else {
+        return b[sortType.sortProperty] - a[sortType.sortProperty];
+      }
+    })
+    .filter((obj) => categoryId === 0 || obj.category === categoryId) // разобрать
+    .filter((obj) =>
+      obj.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
   React.useEffect(() => {
     setLoading(true);
     axios
@@ -26,7 +42,7 @@ const Home = () => {
         console.log("Ошибка");
       });
     // либо в finally добавить set Loading
-  }, [categoryId, sortType]);
+  }, [categoryId, sortType, searchValue]);
   return (
     <div className="container">
       <div className="content__top">
@@ -40,17 +56,15 @@ const Home = () => {
       <div className="content__items">
         {isLoading
           ? [...new Array(6)].map((_, i) => <Skeleton key={i} />)
-          : items
-              .sort((a, b) => {
-                if (sortType.sortProperty === "title") {
-                  return a.title.localeCompare(b.title);
-                } else {
-                  return b[sortType.sortProperty] - a[sortType.sortProperty];
-                }
-              })
-              .filter((obj) => categoryId === 0 || obj.category === categoryId) // разобрать
+          : filteredItems
+              .slice(start, end)
               .map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
       </div>
+      <Pagination
+        value={currentPage}
+        onChangePage={(i) => setCurrentPage(i)}
+        countPage={Math.ceil(filteredItems.length / itemPerPage)}
+      ></Pagination>
     </div>
   );
 };
