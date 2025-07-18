@@ -4,18 +4,15 @@ import Categories from "../components/Categories";
 import PizzaBlock from "../components/PizzaBlock/";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
-import { AppContext } from "../App";
+import { useSelector } from "react-redux";
 import axios from "axios";
 const Home = () => {
-  const { searchValue } = React.useContext(AppContext);
+  const categoryId = useSelector((state) => state.filter.categoryId);
+  const sortType = useSelector((state) => state.filter.sort.sortProperty);
+  const searchValue = useSelector((state) => state.filter.searchValue);
+  const currentPage = useSelector((state) => state.filter.currentPage);
   const [items, setItems] = React.useState([]);
   const [isLoading, setLoading] = React.useState(true);
-  const [categoryId, setCategoryId] = React.useState(0);
-  const [sortType, setSortType] = React.useState({
-    name: "популярности",
-    sortProperty: "rating",
-  });
-  const [currentPage, setCurrentPage] = React.useState(0);
   const itemPerPage = 4;
   const start = itemPerPage * currentPage;
   const end = start + itemPerPage;
@@ -43,16 +40,12 @@ const Home = () => {
       .catch((err) => {
         console.log("Ошибка");
       });
-    // либо в finally добавить set Loading
   }, [categoryId, sortType, searchValue]);
   return (
     <div className="container">
       <div className="content__top">
-        <Categories
-          value={categoryId}
-          onChangeCategory={(i) => setCategoryId(i)}
-        />
-        <Sort value={sortType} onChangeSort={(i) => setSortType(i)} />
+        <Categories />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
@@ -63,8 +56,6 @@ const Home = () => {
               .map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
       </div>
       <Pagination
-        value={currentPage}
-        onChangePage={(i) => setCurrentPage(i)}
         countPage={Math.ceil(filteredItems.length / itemPerPage)}
       ></Pagination>
     </div>
