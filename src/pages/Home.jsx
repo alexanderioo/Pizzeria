@@ -1,14 +1,19 @@
 import React from "react";
 import Sort from "../components/Sort";
+import qs from "qs";
+import { list } from "../components/Sort";
+import { useNavigate } from "react-router-dom";
 import Categories from "../components/Categories";
 import PizzaBlock from "../components/PizzaBlock/";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setFilters } from "../redux/slices/filterSlice";
 import axios from "axios";
 const Home = () => {
+  const navigate = useNavigate();
   const categoryId = useSelector((state) => state.filter.categoryId);
-  const sortType = useSelector((state) => state.filter.sort.sortProperty);
+  const sortType = useSelector((state) => state.filter.sort);
   const searchValue = useSelector((state) => state.filter.searchValue);
   const currentPage = useSelector((state) => state.filter.currentPage);
   const [items, setItems] = React.useState([]);
@@ -16,6 +21,8 @@ const Home = () => {
   const itemPerPage = 4;
   const start = itemPerPage * currentPage;
   const end = start + itemPerPage;
+  const dispatch = useDispatch();
+  const isMounted = React.useRef(false);
   const filteredItems = items
     .sort((a, b) => {
       if (sortType.sortProperty === "title") {
@@ -28,6 +35,28 @@ const Home = () => {
     .filter((obj) =>
       obj.title.toLowerCase().includes(searchValue.toLowerCase())
     );
+  console.log(window.location.search);
+  // Если был первый рендер, то проверяем URL-параметры и сохраняем в Redux
+  React.useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sortList =
+        list.find((obj) => obj.sortProperty === params.sortProperty) || list[0];
+      dispatch(setFilters({ ...params, sort: sortList }));
+    }
+  }, []);
+  // Если изменили параметры и был первый рендер
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortProperty: sortType,
+        categoryId,
+        currentPage,
+      });
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
+  }, [sortType.sortProperty, categoryId, currentPage]);
   React.useEffect(() => {
     setLoading(true);
     axios
@@ -35,12 +64,11 @@ const Home = () => {
       .then((res) => {
         setItems(res.data);
         setLoading(false);
-        window.scrollTo(0, 0);
       })
       .catch((err) => {
         console.log("Ошибка");
       });
-  }, [categoryId, sortType, searchValue]);
+  }, []);
   return (
     <div className="container">
       <div className="content__top">
