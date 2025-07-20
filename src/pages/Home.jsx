@@ -9,21 +9,20 @@ import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 import { useSelector, useDispatch } from "react-redux";
 import { setFilters } from "../redux/slices/filterSlice";
-import axios from "axios";
+import { fetchItems } from "../redux/slices/pizzaSlice";
 const Home = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { items, status } = useSelector((state) => state.pizza);
   const categoryId = useSelector((state) => state.filter.categoryId);
   const sortType = useSelector((state) => state.filter.sort);
   const searchValue = useSelector((state) => state.filter.searchValue);
   const currentPage = useSelector((state) => state.filter.currentPage);
-  const [items, setItems] = React.useState([]);
-  const [isLoading, setLoading] = React.useState(true);
   const itemPerPage = 4;
   const start = itemPerPage * currentPage;
   const end = start + itemPerPage;
-  const dispatch = useDispatch();
   const isMounted = React.useRef(false);
-  const filteredItems = items
+  const navigate = useNavigate();
+  const filteredItems = [...items]
     .sort((a, b) => {
       if (sortType.sortProperty === "title") {
         return a.title.localeCompare(b.title);
@@ -58,17 +57,16 @@ const Home = () => {
     isMounted.current = true;
   }, [sortType.sortProperty, categoryId, currentPage]);
   React.useEffect(() => {
-    setLoading(true);
-    axios
-      .get("http://localhost:8080/items.json")
-      .then((res) => {
-        setItems(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log("Ошибка");
-      });
+    const getItems = async () => {
+      try {
+        await dispatch(fetchItems());
+      } catch (err) {
+        console.log("Ошибка:", err);
+      }
+    };
+    getItems();
   }, []);
+
   return (
     <div className="container">
       <div className="content__top">
@@ -76,13 +74,20 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {isLoading
-          ? [...new Array(6)].map((_, i) => <Skeleton key={i} />)
-          : filteredItems
-              .slice(start, end)
-              .map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
-      </div>
+      {status === "error" ? (
+        <div className="content__error-info">
+          <h2>Произошла ошибка</h2>
+          <p>Попробуйте повторить попытку позже.</p>
+        </div>
+      ) : (
+        <div className="content__items">
+          {status === "loading"
+            ? [...new Array(6)].map((_, i) => <Skeleton key={i} />)
+            : filteredItems
+                .slice(start, end)
+                .map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
+        </div>
+      )}
       <Pagination
         countPage={Math.ceil(filteredItems.length / itemPerPage)}
       ></Pagination>
