@@ -1,6 +1,7 @@
 import React from "react";
 import Sort from "../components/Sort";
 import qs from "qs";
+import { Link } from "react-router-dom";
 import { list } from "../components/Sort";
 import { useNavigate } from "react-router-dom";
 import Categories from "../components/Categories";
@@ -85,7 +86,7 @@ const Home = () => {
             ? [...new Array(6)].map((_, i) => <Skeleton key={i} />)
             : filteredItems
                 .slice(start, end)
-                .map((obj) => <PizzaBlock key={obj.id} {...obj} />)}
+                .map((obj) => <PizzaBlock {...obj} />)}
         </div>
       )}
       <Pagination
