@@ -6,7 +6,7 @@ const initialState = {
 };
 export const fetchItems = createAsyncThunk(
   "pizza/fetchPizzaStatus",
-  async () => {
+  async (thunkApi) => {
     const { data } = await axios.get("http://localhost:8080/items.json");
     return data;
   }
@@ -35,5 +35,6 @@ const pizzaSlice = createSlice({
       });
   },
 });
+export const selectPizzaData = (state) => state.pizza;
 export const { setItems } = pizzaSlice.actions;
 export default pizzaSlice.reducer;

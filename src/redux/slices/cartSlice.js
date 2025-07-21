@@ -48,6 +48,9 @@ const cartSlice = createSlice({
     },
   },
 });
+export const selectCartItemById = (id) => (state) =>
+  state.cart.items.find((obj) => obj.id == id) || {};
+export const selectCart = (state) => state.cart;
 export const {
   setCategoryId,
   addProduct,
@@ -56,8 +59,3 @@ export const {
   minusProduct,
 } = cartSlice.actions;
 export default cartSlice.reducer;
-
-// state.items.push(action.payload);
-//       state.totalPrice = state.items.reduce((sum, obj) => {
-//         return sum + obj.price * (obj.count || 1);
-//       }, 0);

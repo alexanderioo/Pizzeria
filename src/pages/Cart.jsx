@@ -7,10 +7,11 @@ import {
   addProduct,
   removeProduct,
   clearProduct,
+  selectCart,
 } from "../redux/slices/cartSlice";
 const Cart = () => {
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.cart.items);
+  const items = useSelector(selectCart);
   const { totalPrice } = useSelector((state) => state.cart);
 
   if (!totalPrice) {
