@@ -1,23 +1,27 @@
 import React from "react";
 import Sort from "../components/Sort";
 import qs from "qs";
-import { Link } from "react-router-dom";
 import { list } from "../components/Sort";
 import { useNavigate } from "react-router-dom";
 import Categories from "../components/Categories";
-import PizzaBlock from "../components/PizzaBlock/";
+import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 import { useSelector, useDispatch } from "react-redux";
 import { selectFilter, setFilters } from "../redux/slices/filterSlice";
 import { fetchItems, selectPizzaData } from "../redux/slices/pizzaSlice";
+import type { RootState } from "../redux/store";
 const Home = () => {
   const dispatch = useDispatch();
   const { items, status } = useSelector(selectPizzaData);
   const categoryId = useSelector(selectFilter);
-  const sortType = useSelector((state) => state.filter.sort);
-  const searchValue = useSelector((state) => state.filter.searchValue);
-  const currentPage = useSelector((state) => state.filter.currentPage);
+  const sortType = useSelector((state: RootState) => state.filter.sort);
+  const searchValue = useSelector(
+    (state: RootState) => state.filter.searchValue
+  );
+  const currentPage = useSelector(
+    (state: RootState) => state.filter.currentPage
+  );
   const itemPerPage = 4;
   const start = itemPerPage * currentPage;
   const end = start + itemPerPage;
@@ -60,7 +64,10 @@ const Home = () => {
   React.useEffect(() => {
     const getItems = async () => {
       try {
-        await dispatch(fetchItems());
+        await dispatch(
+          // @ts-ignore
+          fetchItems()
+        );
       } catch (err) {
         console.log("Ошибка:", err);
       }

@@ -3,9 +3,15 @@ import ReactPaginate from "react-paginate";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentPage } from "../../redux/slices/filterSlice";
 import styles from "./Pagination.module.scss";
-const Pagination = ({ countPage }) => {
+import type { RootState } from "../../redux/store";
+type PaginationProps = {
+  countPage: number;
+};
+const Pagination: React.FC<PaginationProps> = ({ countPage }) => {
   const dispatch = useDispatch();
-  const currentPage = useSelector((state) => state.filter.currentPage);
+  const currentPage = useSelector(
+    (state: RootState) => state.filter.currentPage
+  );
   return (
     <ReactPaginate
       className={styles.root}

@@ -1,12 +1,24 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  addProduct,
-  selectCartItem,
-  selectCartItemById,
-} from "../../redux/slices/cartSlice";
-function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
+import { addProduct, selectCartItemById } from "../../redux/slices/cartSlice";
+type PizzaBlockProps = {
+  id: number;
+  title: string;
+  price: number;
+  imageUrl: string;
+  sizes: number[];
+  types: number[];
+  rating: number;
+};
+const PizzaBlock: React.FC<PizzaBlockProps> = ({
+  id,
+  title,
+  price,
+  imageUrl,
+  sizes,
+  types,
+}) => {
   const [activeType, setActiveType] = React.useState(0);
   const [activeSize, setActiveSize] = React.useState(0);
   const typeNames = ["тонкое", "традиционное"];
@@ -83,5 +95,5 @@ function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
       </div>
     </div>
   );
-}
+};
 export default PizzaBlock;
