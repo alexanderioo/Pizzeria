@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import CardItem from "../components/CartItem";
 import CartEmpty from "../components/CartEmpty";
 import type { RootState } from "../redux/store";
 import { clearProduct } from "../redux/slices/cartSlice";
 import { Item } from "../components/CartItem";
+import CartItem from "../components/CartItem";
+import type { CartItem as CartItemType } from "../redux/slices/cartSlice";
+
 const Cart = () => {
   const dispatch = useDispatch();
   const { items } = useSelector((state: RootState) => state.cart);
@@ -94,8 +96,8 @@ const Cart = () => {
           </div>
         </div>
         <div className="content__items">
-          {items.map((item: Item, id) => (
-            <CardItem key={id} {...item}></CardItem>
+          {items.map((item: CartItemType, id) => (
+            <CartItem key={id} {...item}></CartItem>
           ))}
         </div>
         <div className="cart__bottom">

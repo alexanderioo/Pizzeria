@@ -46,6 +46,7 @@ const Home = () => {
       const params = qs.parse(window.location.search.substring(1));
       const sortList =
         list.find((obj) => obj.sortProperty === params.sortProperty) || list[0];
+      // @ts-expect-error
       dispatch(setFilters({ ...params, sort: sortList }));
     }
   }, []);

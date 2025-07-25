@@ -5,7 +5,7 @@ import {
   minusProduct,
 } from "../redux/slices/cartSlice";
 export type Item = {
-  id: number;
+  id: string;
   title: string;
   type: string;
   size: number;
@@ -13,15 +13,6 @@ export type Item = {
   imageUrl: string;
   price: number;
 };
-// type PizzaBlockProps = {
-//   id: number;
-//   title: string;
-//   price: number;
-//   imageUrl: string;
-//   sizes: number[];
-//   types: number[];
-//   rating: number;
-// };
 const CartItem: React.FC<Item> = ({
   id,
   title,
@@ -36,6 +27,12 @@ const CartItem: React.FC<Item> = ({
     dispatch(
       addProduct({
         id,
+        title,
+        price,
+        imageUrl,
+        type,
+        size,
+        count: 1,
       })
     );
   };

@@ -15,15 +15,18 @@ function Sort() {
   const sort = useSelector(selectSort);
   const [isVisible, setOpen] = React.useState(false);
   const sortRef = React.useRef<HTMLDivElement>(null);
-  const onClickListItem = (sortOption: SortItem) => {
+  const onClickListItem = (sortOption: any) => {
     dispatch(setSortType(sortOption));
     setOpen(false);
   };
 
   React.useEffect(() => {
-    const handeClickOutside = (event: any) => {
-      if (event.composedPath().includes(sortRef.current)) {
-        console.log("был клик на сорт");
+    const handeClickOutside = (event: MouseEvent) => {
+      if (
+        sortRef.current &&
+        !event.composedPath().includes(sortRef.current as EventTarget)
+      ) {
+        setOpen(false);
       }
     };
     document.body.addEventListener("click", handeClickOutside);
